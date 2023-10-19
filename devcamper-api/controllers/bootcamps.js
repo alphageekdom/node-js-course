@@ -64,6 +64,7 @@ exports.updateBootcamp = async (req, res, next) => {
       runValidators: true,
     });
 
+    // Bootcamp doesn't exist
     if (!bootcamp) {
       return res.status(400).json({ success: false });
     }
@@ -82,8 +83,21 @@ exports.updateBootcamp = async (req, res, next) => {
 // @desc    Delete bootcamp
 // @route   Delete /api/v1/bootcamps/:id
 // @access  Private
-exports.deleteBootcamp = (req, res, next) => {
-  res
-    .status(200)
-    .json({ success: true, msg: `Delete bootcamp ${req.params.id}` });
+exports.deleteBootcamp = async (req, res, next) => {
+  try {
+    const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
+
+    if (!bootcamp) {
+      return res
+        .status(400)
+        .json({ success: false, msg: 'Bootcamp DOES NOT exist' });
+    }
+
+    res
+      .status(200)
+      .json({ success: true, msg: `Delete bootcamp ${bootcamp.id}`, data: {} });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, error: 'Something went wrong' });
+  }
 };
