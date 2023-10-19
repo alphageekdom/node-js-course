@@ -11,7 +11,7 @@ const BootcampSchema = new mongoose.Schema({
   slug: String,
   description: {
     type: String,
-    // required: [true, 'Please add a description'],
+    required: [true, 'Please add a description'],
     maxlength: [500, 'Description cannot be more than 50 characters'],
   },
   website: {

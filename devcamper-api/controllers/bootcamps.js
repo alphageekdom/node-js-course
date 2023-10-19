@@ -13,9 +13,8 @@ exports.getBootcamps = async (req, res, next) => {
       count: bootcamps.length,
       data: bootcamps,
     });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, error: 'Something went wrong' });
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -37,11 +36,8 @@ exports.getBootcamp = async (req, res, next) => {
       msg: `Show bootcamp ${bootcamp.id}`,
       data: bootcamp,
     });
-  } catch (error) {
-    console.log(error);
-    next(
-      new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
-    );
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -56,9 +52,8 @@ exports.createBootcamp = async (req, res, next) => {
       success: 'true',
       data: savedBootcamp,
     });
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ success: false, error: 'Something went wrong' });
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -74,7 +69,9 @@ exports.updateBootcamp = async (req, res, next) => {
 
     // Bootcamp doesn't exist
     if (!bootcamp) {
-      return res.status(400).json({ success: false });
+      return next(
+        new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+      );
     }
 
     res.status(200).json({
@@ -82,9 +79,8 @@ exports.updateBootcamp = async (req, res, next) => {
       msg: `Update bootcamp ${bootcamp.id}`,
       data: bootcamp,
     });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, error: 'Something went wrong' });
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -96,16 +92,15 @@ exports.deleteBootcamp = async (req, res, next) => {
     const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
 
     if (!bootcamp) {
-      return res
-        .status(400)
-        .json({ success: false, msg: 'Bootcamp DOES NOT exist' });
+      return next(
+        new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+      );
     }
 
     res
       .status(200)
       .json({ success: true, msg: `Delete bootcamp ${bootcamp.id}`, data: {} });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, error: 'Something went wrong' });
+  } catch (err) {
+    next(err);
   }
 };
