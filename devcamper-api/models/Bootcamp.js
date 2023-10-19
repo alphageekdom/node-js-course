@@ -9,9 +9,9 @@ const BootcampSchema = new mongoose.Schema({
     maxlength: [50, 'Name cannot be more than 50 characters'],
   },
   slug: String,
-  desciption: {
+  description: {
     type: String,
-    required: [true, 'Please add a description'],
+    // required: [true, 'Please add a description'],
     maxlength: [500, 'Description cannot be more than 50 characters'],
   },
   website: {
@@ -92,10 +92,10 @@ const BootcampSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  username: {
+  user: {
     type: String,
   },
-  date: {
+  createdAt: {
     type: Date,
     default: Date.now,
   },
