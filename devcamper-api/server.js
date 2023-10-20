@@ -7,6 +7,7 @@ const colors = require('colors');
 const fileUpload = require('express-fileupload');
 const errorHandler = require('./middleware/error');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 
 connectDB();
 
@@ -20,6 +21,9 @@ const app = express();
 // Body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Cookie parser
+app.use(cookieParser());
 
 // Dev logging middleware
 if (process.env.NODE_ENV === 'development') {
