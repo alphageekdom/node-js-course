@@ -95,9 +95,6 @@ const BootcampSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    user: {
-      type: String,
-    },
     createdAt: {
       type: Date,
       default: Date.now,
