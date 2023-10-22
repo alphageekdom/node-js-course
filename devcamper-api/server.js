@@ -1,13 +1,14 @@
-const express = require('express');
 require('dotenv').config({ path: './config/config.env' });
-const morgan = require('morgan');
-const port = process.env.PORT || 5000;
-const connectDB = require('./config/db');
-const colors = require('colors');
-const fileUpload = require('express-fileupload');
+const mongoSanitize = require('express-mongo-sanitize');
 const errorHandler = require('./middleware/error');
-const path = require('path');
+const fileUpload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
+const connectDB = require('./config/db');
+const port = process.env.PORT || 5000;
+const express = require('express');
+const morgan = require('morgan');
+const colors = require('colors');
+const path = require('path');
 
 connectDB();
 
@@ -34,6 +35,9 @@ if (process.env.NODE_ENV === 'development') {
 
 // File uploading
 app.use(fileUpload());
+
+// Sanitize data
+app.use(mongoSanitize());
 
 // static folder
 app.use(express.static(path.join(__dirname, 'public')));
