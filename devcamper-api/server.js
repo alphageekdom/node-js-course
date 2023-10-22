@@ -2,15 +2,18 @@ require('dotenv').config({ path: './config/config.env' });
 const mongoSanitize = require('express-mongo-sanitize');
 const errorHandler = require('./middleware/error');
 const fileUpload = require('express-fileupload');
+const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
-const xssClean = require('xss-clean');
 const port = process.env.PORT || 5000;
 const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const xss = require('xss-clean');
 const colors = require('colors');
 const path = require('path');
+const cors = require('cors');
+const hpp = require('hpp');
 
 connectDB();
 
@@ -45,7 +48,21 @@ app.use(mongoSanitize());
 app.use(helmet());
 
 // Prevent XSS attacks
-app.use(xssClean());
+app.use(xss());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowsMs: 10 * 60 * 1000, //10mins
+  max: 100,
+});
+
+app.use(limiter);
+
+// Prevent http param pollution
+app.use(hpp());
+
+// Enable cors
+app.use(cors());
 
 // static folder
 app.use(express.static(path.join(__dirname, 'public')));
